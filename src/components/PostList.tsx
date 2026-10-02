@@ -8,6 +8,7 @@ import { POST_TAGS } from "@/lib/postTags";
 import type { Post, PostSort, PostTag } from "@/types";
 
 import { PostCard } from "./PostCard";
+import { ReportSheet } from "./ReportSheet";
 import { WriteButton } from "./WriteButton";
 
 type Props = {
@@ -36,6 +37,7 @@ export function PostList({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [version, setVersion] = useState(0); // 글쓰기 후 다시 불러오기
+  const [reporting, setReporting] = useState<Post | null>(null);
   const first = useRef(true);
 
   useEffect(() => {
@@ -157,7 +159,12 @@ export function PostList({
           </div>
         ) : (
           recent.map((post) => (
-            <PostCard key={post.id} post={post} onDeleted={removePost} />
+            <PostCard
+              key={post.id}
+              post={post}
+              onDeleted={removePost}
+              onReport={setReporting}
+            />
           ))
         )}
 
@@ -174,11 +181,21 @@ export function PostList({
                 post={post}
                 dimmed
                 onDeleted={removePost}
+                onReport={setReporting}
               />
             ))}
           </>
         )}
       </div>
+
+      <ReportSheet
+        post={reporting}
+        onClose={() => setReporting(null)}
+        onReported={() => {
+          setReporting(null);
+          setVersion((v) => v + 1); // 3건 누적으로 숨겨졌으면 목록에서 빠진다
+        }}
+      />
 
       <WriteButton
         label="✏️ 한마디 남기기"

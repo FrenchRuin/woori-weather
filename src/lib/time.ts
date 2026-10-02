@@ -14,7 +14,11 @@ export function relativeTime(iso: string, now: Date = new Date()) {
   const hours = Math.floor(minutes / 60);
   if (hours < 24) return `${hours}시간 전`;
   if (kstDay(now.getTime()) - kstDay(t) === 1) return "어제";
+  return monthDay(iso);
+}
 
-  const wall = new Date(t + KST_OFFSET_MS);
+/** "M월 D일" (KST) */
+export function monthDay(iso: string) {
+  const wall = new Date(new Date(iso).getTime() + KST_OFFSET_MS);
   return `${wall.getUTCMonth() + 1}월 ${wall.getUTCDate()}일`;
 }

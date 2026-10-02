@@ -58,3 +58,6 @@ export type Post = {
   isMine: boolean;
   createdAt: string;
 };
+
+/** 내 정보의 "내가 쓴 글" (숨김 글 포함) */
+export type MyPost = Post & { isHidden: boolean };

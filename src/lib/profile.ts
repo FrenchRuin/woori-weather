@@ -38,6 +38,12 @@ export async function getMyProfile(
   };
 }
 
+/** R4: 아직 닉네임을 바꿀 수 없으면 가능해지는 시각, 바꿀 수 있으면 null */
+export function nicknameCooldownUntil(profile: Profile, now = new Date()) {
+  const at = profile.nicknameChangeableAt;
+  return at && new Date(at) > now ? at : null;
+}
+
 /** 닉네임 사용 가능 여부 (대소문자 무시). excludeUserId 는 본인 제외용 */
 export async function isNicknameTaken(
   supabase: SupabaseClient<Database>,

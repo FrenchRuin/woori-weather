@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
@@ -24,12 +25,22 @@ export default async function Home() {
     <main className="min-h-dvh pb-28">
       <div className="bg-linear-to-b from-[#C6E6FB] to-canvas pb-2">
         <header className="flex items-center justify-between px-5 pt-6 pb-1.5">
-          <h1 className="flex items-center gap-1 text-xl font-extrabold">
-            📍 {profile.dong.name}
+          <h1 className="text-xl font-extrabold">
+            {/* 동네는 1개라 변경은 내 정보에서 */}
+            <Link href="/me" className="flex items-center gap-1">
+              📍 {profile.dong.name}
+              <span className="text-sm text-sub" aria-hidden>
+                ▾
+              </span>
+            </Link>
           </h1>
-          <span className="flex size-10 items-center justify-center rounded-full bg-white text-xl">
+          <Link
+            href="/me"
+            aria-label="내 정보"
+            className="flex size-10 items-center justify-center rounded-full bg-white text-xl"
+          >
             👤
-          </span>
+          </Link>
         </header>
         <Suspense fallback={<WeatherSkeleton />}>
           <WeatherSection dongCode={profile.dong.code} />

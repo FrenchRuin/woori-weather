@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import type { Post } from "@/types";
 
 import { PostCard } from "./PostCard";
+import { ReportSheet } from "./ReportSheet";
 import { WriteButton } from "./WriteButton";
 
 type Props = {
@@ -18,6 +20,7 @@ type Props = {
 export function HomePosts({ posts, total, dongName }: Props) {
   const router = useRouter();
   const refresh = () => router.refresh();
+  const [reporting, setReporting] = useState<Post | null>(null);
 
   return (
     <section className="flex flex-col gap-2.5 pt-2">
@@ -41,9 +44,23 @@ export function HomePosts({ posts, total, dongName }: Props) {
         </div>
       ) : (
         posts.map((post) => (
-          <PostCard key={post.id} post={post} onDeleted={refresh} />
+          <PostCard
+            key={post.id}
+            post={post}
+            onDeleted={refresh}
+            onReport={setReporting}
+          />
         ))
       )}
+
+      <ReportSheet
+        post={reporting}
+        onClose={() => setReporting(null)}
+        onReported={() => {
+          setReporting(null);
+          refresh();
+        }}
+      />
 
       <WriteButton
         label="📣 지금 우리 동네 날씨 알려주기"

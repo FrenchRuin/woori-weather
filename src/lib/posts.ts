@@ -3,7 +3,7 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 import type { Database } from "@/types/database";
-import type { Post, PostScope, PostSort, PostTag } from "@/types";
+import type { MyPost, Post, PostScope, PostSort, PostTag } from "@/types";
 
 const HOUR_MS = 60 * 60 * 1000;
 export const RECENT_HOURS = 6; // R10: 최근 글
@@ -87,4 +87,21 @@ export async function getPost(supabase: SupabaseClient<Database>, id: string) {
     .maybeSingle();
   if (error) throw error;
   return data ? toPost(data) : null;
+}
+
+const MY_POSTS_LIMIT = 100;
+
+/** 내가 쓴 글: 기간 제한 없이, 신고로 숨겨진 글 포함 */
+export async function listMyPosts(
+  supabase: SupabaseClient<Database>,
+  userId: string,
+): Promise<MyPost[]> {
+  const { data, error } = await supabase
+    .from("post_feed")
+    .select(`${FEED_COLUMNS}, is_hidden`)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(MY_POSTS_LIMIT);
+  if (error) throw error;
+  return data.map((row) => ({ ...toPost(row), isHidden: !!row.is_hidden }));
 }
