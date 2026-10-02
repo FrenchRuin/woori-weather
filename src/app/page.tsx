@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
+import { FeelCard } from "@/components/FeelCard";
 import { HourlyForecast } from "@/components/HourlyForecast";
 import { WeatherHero } from "@/components/WeatherHero";
 import { getMyProfile } from "@/lib/profile";
+import { getReactionSummary } from "@/lib/reactions";
 import { createClient } from "@/lib/supabase/server";
 import { getWeather } from "@/lib/weather";
 
@@ -31,8 +33,30 @@ export default async function Home() {
           <WeatherSection dongCode={profile.dong.code} />
         </Suspense>
       </div>
+      <div className="mt-3.5 flex flex-col gap-3.5 px-4">
+        <Suspense
+          fallback={
+            <div className="h-64 animate-pulse rounded-[22px] bg-white/70" />
+          }
+        >
+          <FeelSection dongCode={profile.dong.code} userId={userId} />
+        </Suspense>
+      </div>
     </main>
   );
+}
+
+async function FeelSection({
+  dongCode,
+  userId,
+}: {
+  dongCode: string;
+  userId: string;
+}) {
+  const supabase = await createClient();
+  const summary = await getReactionSummary(supabase, dongCode, userId);
+  // 동네를 바꾸면 카드 상태를 새로 시작
+  return <FeelCard key={dongCode} initial={summary} />;
 }
 
 async function WeatherSection({ dongCode }: { dongCode: string }) {

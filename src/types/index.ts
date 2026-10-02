@@ -32,3 +32,14 @@ export type Weather = {
   }>; // 12개, time 은 KST ISO
   fetchedAt: string;
 };
+
+export type Feel = "cold" | "good" | "hot";
+export type ReactionTag = "rain" | "wind" | "clear";
+
+export type ReactionSummary = {
+  total: number;
+  feel: Record<Feel, number>; // 개수
+  percent: Record<Feel, number>; // 정수 %
+  tags: Record<ReactionTag, number>;
+  mine: { feel: Feel; tags: ReactionTag[]; editableUntil: string } | null;
+};
