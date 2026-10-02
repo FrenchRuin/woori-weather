@@ -1,5 +1,7 @@
 # 우리동네 날씨
 
+배포: https://woori-weather.vercel.app
+
 공식 날씨 예보와 함께 같은 행정동 사람들의 체감 투표, 동네 한마디를 보여주는 모바일 웹 (Demo v0.1).
 
 - 명세: [`SPEC.md`](./SPEC.md)
@@ -39,7 +41,7 @@ DB 가 직접 보장하는 규칙: 닉네임 형식·중복(대소문자 무시)
 - Supabase → Authentication → Providers → Kakao: REST API 키 + Client Secret
 - **비즈 앱이 아니면 카카오가 이메일을 주지 않으므로** Kakao provider 의 `Allow users without an email`(`external_kakao_email_optional`)을 켠다
 - 카카오 콘솔 Redirect URI: `https://<project-ref>.supabase.co/auth/v1/callback`
-- Supabase Redirect URLs: `http://localhost:3000/auth/callback` (배포 시 운영 주소 추가)
+- Supabase Redirect URLs: `http://localhost:3000/auth/callback`, `https://woori-weather.vercel.app/auth/callback`
 
 ## 배포 (Vercel)
 
