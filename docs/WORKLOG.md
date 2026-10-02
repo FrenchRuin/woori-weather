@@ -13,7 +13,16 @@
 | M5 체감 투표              | ✅ 완료 (2계정으로 집계 확인)          | `cb5e8d6` |
 | M6 동네 한마디            | ✅ 완료 (2계정으로 글·공감 확인)       | `a8e5459` |
 | M7 신고 + 내 정보         | ✅ 완료 (4계정으로 신고 3건 숨김 확인) | `fec7c88` |
-| M8 마무리                 | 🟡 배포 완료, 실제 폰 확인 남음        | 아래 참고 |
+| M8 마무리                 | 🟡 배포 완료, 실제 폰 확인 남음        | `94048a8` |
+
+## 다음 세션에서 이어서 할 일 (2026-10-02 기준)
+
+- 배포 주소: https://woori-weather.vercel.app (`main` push 시 Vercel 자동 배포, 리전 icn1)
+- 로컬: `pnpm dev` → http://localhost:3000 (`.env.local` 필요)
+
+1. **실제 폰 확인 (M8 완료 기준)**: 아래 "M8 → 실제 폰 확인 목록"을 배포 주소에서 확인. 문제가 있으면 수정 → push → 재확인, 다 되면 진행 현황의 M8을 ✅로 바꾼다
+2. **보안 정리**: `.env.local`의 `SUPABASE_ACCESS_TOKEN` 삭제 + Supabase 대시보드(Account → Access Tokens)에서 Revoke. 이후 Supabase 설정 변경은 대시보드에서 직접 한다
+3. 스펙(M1~M8) 밖의 기능은 추가하지 않는다. 새로 하고 싶은 게 생기면 결정 사항에 먼저 적고 진행
 
 ---
 
@@ -194,3 +203,6 @@
 
 - Supabase 관리 작업(마이그레이션 적용, Auth 설정)은 `.env.local`의 `SUPABASE_ACCESS_TOKEN`으로 Management API를 호출한다. 작업이 끝나면 토큰을 Revoke한다.
 - 카카오 로그인 설정은 README의 "카카오 로그인 (Supabase)" 참고
+- Supabase Auth URL 설정(2026-10-02): Site URL `https://woori-weather.vercel.app`, Redirect URLs `http://localhost:3000/auth/callback`, `https://woori-weather.vercel.app/auth/callback`
+- Vercel 환경 변수는 `.env.example`의 5개만(`SUPABASE_ACCESS_TOKEN`, `KAKAO_CLIENT_SECRET`은 넣지 않음)
+- 테스트 방법: 서비스 키로 테스트 유저(`*@woori.test`)를 만들어 세션 쿠키로 API/브라우저 확인, 끝나면 `*@woori.test` 유저 삭제(cascade로 데이터도 삭제). 개발 서버를 백그라운드로 오래 띄우면 출력이 끊겨(EPIPE) 새 코드가 반영 안 될 수 있으니 이상하면 재시작
