@@ -4,6 +4,7 @@
 
 - 명세: [`SPEC.md`](./SPEC.md)
 - 화면 디자인: `design.html` (Claude Design 번들, 브라우저로 열기)
+- 작업 기록 · 결정 사항: [`docs/WORKLOG.md`](./docs/WORKLOG.md)
 
 ## 기술 스택
 
