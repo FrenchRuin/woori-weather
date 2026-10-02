@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans:
+    "Pretendard Variable", Pretendard, "Noto Sans KR", system-ui, sans-serif;
+
+  /* 브랜드 / 텍스트 */
+  --color-primary: #2b95e9;
+  --color-primary-strong: #1a78c4;
+  --color-primary-soft: #eaf5fe;
+  --color-ink: #17324a;
+  --color-sub: #557089;
+  --color-muted: #8aa0b4;
+
+  /* 배경 / 선 */
+  --color-canvas: #f3f9fe;
+  --color-surface: #ffffff;
+  --color-field: #f1f6fb;
+  --color-line: #dce7f0;
+
+  /* 체감 */
+  --color-cold: #4a8fea;
+  --color-good: #3cc283;
+  --color-hot: #ff8e42;
+
+  /* 상태 */
+  --color-danger: #f0524f;
+  --color-kakao: #fee500;
+}
+
+body {
+  @apply bg-canvas text-ink antialiased;
+}
