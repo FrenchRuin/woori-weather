@@ -12,10 +12,16 @@ export class ApiError extends Error {
 
 /** 클라이언트용 fetch. 실패하면 { error: { code, message } } 를 ApiError 로 던진다. */
 export async function api<T>(url: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(url, {
-    ...init,
-    headers: { "Content-Type": "application/json", ...init?.headers },
-  });
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      ...init,
+      headers: { "Content-Type": "application/json", ...init?.headers },
+    });
+  } catch (e) {
+    if (init?.signal?.aborted) throw e;
+    throw new ApiError(0, "NETWORK", "인터넷 연결을 확인해주세요");
+  }
   if (res.status === 204) return undefined as T;
   const body = await res.json().catch(() => null);
   if (!res.ok) {

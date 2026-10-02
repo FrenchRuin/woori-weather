@@ -4,6 +4,11 @@ import { Suspense } from "react";
 
 import { FeelCard } from "@/components/FeelCard";
 import { HomePosts } from "@/components/HomePosts";
+import {
+  FeelSkeleton,
+  PostsSkeleton,
+  WeatherSkeleton,
+} from "@/components/Skeletons";
 import { HourlyForecast } from "@/components/HourlyForecast";
 import { WeatherHero } from "@/components/WeatherHero";
 import { listPosts } from "@/lib/posts";
@@ -47,18 +52,10 @@ export default async function Home() {
         </Suspense>
       </div>
       <div className="mt-3.5 flex flex-col gap-3.5 px-4">
-        <Suspense
-          fallback={
-            <div className="h-64 animate-pulse rounded-[22px] bg-white/70" />
-          }
-        >
+        <Suspense fallback={<FeelSkeleton />}>
           <FeelSection dongCode={profile.dong.code} userId={userId} />
         </Suspense>
-        <Suspense
-          fallback={
-            <div className="h-48 animate-pulse rounded-[18px] bg-white/70" />
-          }
-        >
+        <Suspense fallback={<PostsSkeleton />}>
           <PostsSection
             dongCode={profile.dong.code}
             dongName={profile.dong.name}
@@ -77,13 +74,18 @@ async function PostsSection({
   dongName: string;
 }) {
   const supabase = await createClient();
-  const { posts, total } = await listPosts(supabase, {
-    dongCode,
-    sort: "new",
-    scope: "recent",
-    limit: 3,
-  });
-  return <HomePosts posts={posts} total={total} dongName={dongName} />;
+  const result = await orNull(
+    listPosts(supabase, { dongCode, sort: "new", scope: "recent", limit: 3 }),
+  );
+  // 실패해도 글쓰기 버튼은 남긴다
+  return (
+    <HomePosts
+      posts={result?.posts ?? []}
+      total={result?.total ?? 0}
+      failed={!result}
+      dongName={dongName}
+    />
+  );
 }
 
 async function FeelSection({
@@ -94,7 +96,10 @@ async function FeelSection({
   userId: string;
 }) {
   const supabase = await createClient();
-  const summary = await getReactionSummary(supabase, dongCode, userId);
+  const summary = await orNull(getReactionSummary(supabase, dongCode, userId));
+  if (!summary) {
+    return <SectionError emoji="🙋" message="투표 현황을 불러오지 못했어요" />;
+  }
   // 동네를 바꾸면 카드 상태를 새로 시작
   return <FeelCard key={dongCode} initial={summary} />;
 }
@@ -107,24 +112,12 @@ async function WeatherSection({ dongCode }: { dongCode: string }) {
     .eq("code", dongCode)
     .single();
 
-  const weather = dong
-    ? await getWeather(dong).catch((e) => {
-        console.error(e);
-        return null;
-      })
-    : null;
+  const weather = dong ? await orNull(getWeather(dong)) : null;
 
   if (!weather) {
     return (
-      <div className="mx-4 mt-6 rounded-[20px] bg-white px-4 py-8 text-center">
-        <p className="text-4xl" aria-hidden>
-          🌫️
-        </p>
-        <p className="mt-2 text-[15px] text-[#3B5A75]">
-          날씨를 불러오지 못했어요
-          <br />
-          잠시 후 다시 확인해주세요
-        </p>
+      <div className="mx-4 mt-6">
+        <SectionError emoji="🌫️" message="날씨를 불러오지 못했어요" />
       </div>
     );
   }
@@ -139,13 +132,25 @@ async function WeatherSection({ dongCode }: { dongCode: string }) {
   );
 }
 
-function WeatherSkeleton() {
+/** 섹션 하나가 실패해도 화면 전체가 에러가 되지 않게 */
+function orNull<T>(promise: Promise<T>) {
+  return promise.catch((e: unknown) => {
+    console.error(e);
+    return null;
+  });
+}
+
+function SectionError({ emoji, message }: { emoji: string; message: string }) {
   return (
-    <div className="flex animate-pulse flex-col gap-3.5" aria-busy>
-      <div className="mx-auto mt-5 h-21 w-56 rounded-3xl bg-white/60" />
-      <div className="mx-auto h-11 w-40 rounded-xl bg-white/60" />
-      <div className="mx-4 h-24 rounded-[20px] bg-white/70" />
-      <div className="mx-4 h-32 rounded-[20px] bg-white/70" />
+    <div className="rounded-[20px] bg-white px-4 py-8 text-center">
+      <p className="text-4xl" aria-hidden>
+        {emoji}
+      </p>
+      <p className="mt-2 text-[15px] text-[#3B5A75]">
+        {message}
+        <br />
+        잠시 후 다시 확인해주세요
+      </p>
     </div>
   );
 }

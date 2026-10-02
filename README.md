@@ -41,6 +41,19 @@ DB 가 직접 보장하는 규칙: 닉네임 형식·중복(대소문자 무시)
 - 카카오 콘솔 Redirect URI: `https://<project-ref>.supabase.co/auth/v1/callback`
 - Supabase Redirect URLs: `http://localhost:3000/auth/callback` (배포 시 운영 주소 추가)
 
+## 배포 (Vercel)
+
+1. [vercel.com/new](https://vercel.com/new) → GitHub 저장소 `woori-weather` Import
+   (Framework: Next.js, 패키지 매니저는 `pnpm-lock.yaml` 로 자동 인식 — 설정 변경 없음)
+2. **Environment Variables** 에 아래 [환경 변수](#환경-변수) 5개를 `.env.local` 과 같은 값으로 입력 → Deploy
+   - `SUPABASE_ACCESS_TOKEN`, `KAKAO_CLIENT_SECRET` 은 로컬 설정용이라 넣지 않는다
+3. 서버 리전: `vercel.json` 에서 `icn1`(서울)로 고정. Supabase(ap-northeast-2, 서울)·기상청·카카오 API 와 가까워야 응답이 빠르다
+4. 배포 주소(예: `https://woori-weather.vercel.app`)가 나오면 Supabase → Authentication → URL Configuration
+   - Site URL: `https://<배포 주소>`
+   - Redirect URLs 에 `https://<배포 주소>/auth/callback` 추가 (로컬용 `http://localhost:3000/auth/callback` 은 그대로 둠)
+5. 카카오 디벨로퍼스: 로그인 Redirect URI 가 Supabase 주소라 바꿀 필요 없음
+6. 폰에서 배포 주소로 접속해 확인. 현재 위치 찾기는 HTTPS 에서만 동작하므로 폰 확인은 배포 주소로 한다
+
 ## 스크립트
 
 | 명령                        | 설명                 |

@@ -13,11 +13,12 @@ import { WriteButton } from "./WriteButton";
 type Props = {
   posts: Post[]; // 최근 글 최신순 3개
   total: number; // 최근 6시간 글 수
+  failed?: boolean; // 목록을 불러오지 못함
   dongName: string;
 };
 
 /** 메인: 한마디 미리보기 + 하단 고정 글쓰기 버튼 */
-export function HomePosts({ posts, total, dongName }: Props) {
+export function HomePosts({ posts, total, failed, dongName }: Props) {
   const router = useRouter();
   const refresh = () => router.refresh();
   const [reporting, setReporting] = useState<Post | null>(null);
@@ -25,13 +26,19 @@ export function HomePosts({ posts, total, dongName }: Props) {
   return (
     <section className="flex flex-col gap-2.5 pt-2">
       <div className="flex items-center justify-between px-1">
-        <h2 className="text-lg font-extrabold">💬 동네 한마디 · {total}개</h2>
+        <h2 className="text-lg font-extrabold">
+          💬 동네 한마디{failed ? "" : ` · ${total}개`}
+        </h2>
         <Link href="/posts" className="text-sm font-semibold text-primary">
           전체 보기 ›
         </Link>
       </div>
 
-      {posts.length === 0 ? (
+      {failed ? (
+        <p className="rounded-[18px] bg-white px-4 py-7 text-center text-[15px] text-[#3B5A75]">
+          글을 불러오지 못했어요. 잠시 후 다시 확인해주세요
+        </p>
+      ) : posts.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-[18px] bg-white px-4 py-7 text-center">
           <span className="text-4xl" aria-hidden>
             📝
