@@ -22,7 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body>
-        <div className="bg-canvas mx-auto min-h-dvh w-full max-w-[420px]">
+        <div className="mx-auto min-h-dvh w-full max-w-[420px] bg-canvas">
           {children}
         </div>
       </body>
