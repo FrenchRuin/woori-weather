@@ -8,3 +8,27 @@ export type Profile = {
 };
 
 export type ApiErrorBody = { error: { code: string; message: string } };
+
+export type Sky = "clear" | "partly" | "cloudy";
+export type Pty = "none" | "rain" | "rainsnow" | "snow" | "shower";
+
+export type Weather = {
+  now: {
+    temp: number;
+    feelsLike: number;
+    humidity: number;
+    windSpeed: number;
+    sky: Sky;
+    pty: Pty;
+    summary: string; // 예: "흐리고 비"
+  };
+  today: { max: number | null; min: number | null; pop: number };
+  hourly: Array<{
+    time: string;
+    temp: number;
+    sky: Sky;
+    pty: Pty;
+    pop: number;
+  }>; // 12개, time 은 KST ISO
+  fetchedAt: string;
+};
