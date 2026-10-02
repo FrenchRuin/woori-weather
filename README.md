@@ -33,6 +33,13 @@ pnpm dev                     # http://localhost:3000
 
 DB 가 직접 보장하는 규칙: 닉네임 형식·중복(대소문자 무시)·30일 1회 변경, 한마디 1분 1개, 공감/신고 카운터, 신고 3건 자동 숨김, 내 동네에만 투표/글쓰기, 탈퇴 시 cascade 삭제.
 
+## 카카오 로그인 (Supabase)
+
+- Supabase → Authentication → Providers → Kakao: REST API 키 + Client Secret
+- **비즈 앱이 아니면 카카오가 이메일을 주지 않으므로** Kakao provider 의 `Allow users without an email`(`external_kakao_email_optional`)을 켠다
+- 카카오 콘솔 Redirect URI: `https://<project-ref>.supabase.co/auth/v1/callback`
+- Supabase Redirect URLs: `http://localhost:3000/auth/callback` (배포 시 운영 주소 추가)
+
 ## 스크립트
 
 | 명령                        | 설명                 |
