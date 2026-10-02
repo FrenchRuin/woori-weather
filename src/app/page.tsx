@@ -2,8 +2,10 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 import { FeelCard } from "@/components/FeelCard";
+import { HomePosts } from "@/components/HomePosts";
 import { HourlyForecast } from "@/components/HourlyForecast";
 import { WeatherHero } from "@/components/WeatherHero";
+import { listPosts } from "@/lib/posts";
 import { getMyProfile } from "@/lib/profile";
 import { getReactionSummary } from "@/lib/reactions";
 import { createClient } from "@/lib/supabase/server";
@@ -41,9 +43,36 @@ export default async function Home() {
         >
           <FeelSection dongCode={profile.dong.code} userId={userId} />
         </Suspense>
+        <Suspense
+          fallback={
+            <div className="h-48 animate-pulse rounded-[18px] bg-white/70" />
+          }
+        >
+          <PostsSection
+            dongCode={profile.dong.code}
+            dongName={profile.dong.name}
+          />
+        </Suspense>
       </div>
     </main>
   );
+}
+
+async function PostsSection({
+  dongCode,
+  dongName,
+}: {
+  dongCode: string;
+  dongName: string;
+}) {
+  const supabase = await createClient();
+  const { posts, total } = await listPosts(supabase, {
+    dongCode,
+    sort: "new",
+    scope: "recent",
+    limit: 3,
+  });
+  return <HomePosts posts={posts} total={total} dongName={dongName} />;
 }
 
 async function FeelSection({

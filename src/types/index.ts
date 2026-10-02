@@ -43,3 +43,18 @@ export type ReactionSummary = {
   tags: Record<ReactionTag, number>;
   mine: { feel: Feel; tags: ReactionTag[]; editableUntil: string } | null;
 };
+
+export type PostTag = "rain" | "wind" | "temp" | "sun";
+export type PostSort = "new" | "like";
+export type PostScope = "recent" | "old";
+
+export type Post = {
+  id: string;
+  nickname: string;
+  content: string;
+  tag: PostTag | null;
+  likeCount: number;
+  likedByMe: boolean;
+  isMine: boolean;
+  createdAt: string;
+};

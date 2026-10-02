@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { Toaster } from "@/components/Toast";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -25,6 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <div className="mx-auto min-h-dvh w-full max-w-[420px] bg-canvas">
           {children}
         </div>
+        <Toaster />
       </body>
     </html>
   );
