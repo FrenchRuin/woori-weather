@@ -24,6 +24,15 @@ cp .env.example .env.local   # 값 채우기
 pnpm dev                     # http://localhost:3000
 ```
 
+## DB (Supabase)
+
+1. Supabase 대시보드 → SQL Editor 에서 `supabase/migrations/*.sql` 을 파일명 순서대로 실행
+   (Supabase CLI 를 쓴다면 `supabase db push`)
+2. 동작 확인: `supabase/tests/check_init.sql` 을 SQL Editor 에서 실행 → 마지막 결과가 `ALL PASSED` 면 정상
+   (한 트랜잭션 안에서 실행 후 rollback 하므로 데이터가 남지 않음)
+
+DB 가 직접 보장하는 규칙: 닉네임 형식·중복(대소문자 무시)·30일 1회 변경, 한마디 1분 1개, 공감/신고 카운터, 신고 3건 자동 숨김, 내 동네에만 투표/글쓰기, 탈퇴 시 cascade 삭제.
+
 ## 스크립트
 
 | 명령                        | 설명                 |
@@ -54,5 +63,6 @@ src/
   components/
   lib/supabase/   # client.ts(브라우저) · server.ts(서버, RLS) · admin.ts(service role)
   types/
-supabase/migrations/
+supabase/migrations/   # 스키마 · 트리거 · RLS
+supabase/tests/        # SQL 동작 확인 스크립트
 ```
