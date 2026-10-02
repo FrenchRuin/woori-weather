@@ -140,7 +140,7 @@
 - 빈 상태 문구는 스펙 §8 그대로(투표 0명, 글 0개, 필터 결과 없음) + 내가 쓴 글 0개
 - 배포: `vercel.json`에서 함수 리전을 `icn1`(서울)로 고정. Supabase가 ap-northeast-2(서울)라 기본 리전(미국)이면 DB 왕복마다 태평양을 건넌다. 배포 절차는 README "배포 (Vercel)"
 - 검증: 새 테스트 계정으로 온보딩 → 메인 → 투표 → 글쓰기 → 목록 → 내 정보 → 없는 주소 404 를 390px 브라우저로 확인
-- 배포: https://woori-weather.vercel.app (운영 도메인). Supabase Site URL 을 이 주소로 바꾸고 Redirect URLs 에 `/auth/callback` 추가(로컬 주소는 유지). 같은 배포별 주소는 Vercel 로그인 보호가 걸려 있고 배포마다 바뀌므로 쓰지 않는다
+- 배포: https://woori-weather.vercel.app (운영 도메인). Supabase Site URL 을 이 주소로 바꾸고 Redirect URLs 에 `/auth/callback` 추가(로컬 주소는 유지). `woori-weather-<해시>-french-ruin.vercel.app` 같은 배포별 주소는 Vercel 로그인 보호가 걸려 있고 배포마다 바뀌므로 쓰지 않는다
 - 배포 서버 확인(테스트 계정): 동네 검색(카카오) · 프로필 생성 · 캐시에 없던 동네 날씨(기상청 직접 호출, 1.5초) · 체감 집계 · 카카오 로그인 시작(302 → kauth.kakao.com) 정상
 - 남은 것(완료 기준): 실제 폰 브라우저에서 전체 흐름 확인
 
