@@ -2,6 +2,8 @@
 
 import { useEffect, type ReactNode } from "react";
 
+import { lockBodyScroll } from "@/lib/scrollLock";
+
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -16,11 +18,11 @@ export function BottomSheet({ open, onClose, label, children }: Props) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
-    const overflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    // 시트가 겹쳐 열려도 마지막 시트가 닫힐 때 풀린다
+    const unlock = lockBodyScroll();
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = overflow;
+      unlock();
       window.removeEventListener("keydown", onKey);
     };
   }, [open, onClose]);

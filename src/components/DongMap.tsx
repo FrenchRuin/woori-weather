@@ -1,16 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 
 import type { DongPin } from "@/lib/dongPins";
+import { loadKakaoMaps } from "@/lib/kakaoMaps";
 
 import { DongPostsSheet } from "./DongPostsSheet";
 import { Crosshair } from "./icons";
 
 const KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
-const SDK_URL = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${KEY}&autoload=false`;
 const LEVEL = 6; // 동네 이름이 겹치지 않고 주변 동네가 보이는 정도
 const FALLBACK = { lat: 37.5665, lng: 126.978 }; // 내 동네 좌표가 없을 때(서울시청)
 
@@ -20,7 +19,7 @@ type Props = { pins: DongPin[] };
 export function DongMap({ pins }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<kakao.maps.Map | null>(null);
-  const [sdkReady, setSdkReady] = useState(false);
+  const [maps, setMaps] = useState<typeof kakao.maps | null>(null);
   const [failed, setFailed] = useState(!KEY);
   const [selected, setSelected] = useState<DongPin | null>(null);
 
@@ -28,9 +27,20 @@ export function DongMap({ pins }: Props) {
   const empty = pins.every((p) => p.count === 0);
 
   useEffect(() => {
+    if (!KEY) return;
+    let active = true;
+    loadKakaoMaps().then(
+      (loaded) => active && setMaps(() => loaded),
+      () => active && setFailed(true),
+    );
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
     const container = containerRef.current;
-    const maps = window.kakao?.maps;
-    if (!sdkReady || !container || !maps) return;
+    if (!maps || !container) return;
 
     const map = new maps.Map(container, {
       center: new maps.LatLng(home.lat, home.lng),
@@ -53,28 +63,14 @@ export function DongMap({ pins }: Props) {
       mapRef.current = null;
       container.replaceChildren(); // 다시 그릴 때 지도 DOM 이 쌓이지 않게
     };
-  }, [sdkReady, pins, home.lat, home.lng]);
+  }, [maps, pins, home.lat, home.lng]);
 
   function goHome() {
-    const maps = window.kakao?.maps;
     if (maps) mapRef.current?.panTo(new maps.LatLng(home.lat, home.lng));
   }
 
   return (
     <main className="relative h-dvh overflow-hidden bg-[#E3EEF6]">
-      {KEY && (
-        <Script
-          src={SDK_URL}
-          strategy="afterInteractive"
-          onReady={() => {
-            // 도메인이 등록되지 않으면 스크립트는 받아져도 kakao 객체가 없다
-            if (!window.kakao?.maps) setFailed(true);
-            else window.kakao.maps.load(() => setSdkReady(true));
-          }}
-          onError={() => setFailed(true)}
-        />
-      )}
-
       <div ref={containerRef} className="absolute inset-0" />
 
       <header className="absolute inset-x-3 top-3 z-10 flex items-center gap-1 rounded-2xl bg-white/95 py-1.5 pr-4 pl-1 shadow-[0_6px_16px_rgba(23,50,74,.12)]">
