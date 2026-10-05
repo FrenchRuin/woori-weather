@@ -6,12 +6,48 @@ declare namespace kakao.maps {
     constructor(lat: number, lng: number);
   }
 
+  class LatLngBounds {
+    constructor();
+    extend(latlng: LatLng): void;
+  }
+
+  /** 지도 컨테이너 기준 화면 좌표(px) */
+  class Point {
+    x: number;
+    y: number;
+  }
+
+  class MapProjection {
+    containerPointFromCoords(latlng: LatLng): Point;
+  }
+
+  namespace event {
+    function addListener(
+      target: Map,
+      type: "zoom_changed",
+      handler: () => void,
+    ): void;
+    function removeListener(
+      target: Map,
+      type: "zoom_changed",
+      handler: () => void,
+    ): void;
+  }
+
   class Map {
     constructor(
       container: HTMLElement,
       options: { center: LatLng; level: number },
     );
     panTo(latlng: LatLng): void;
+    getProjection(): MapProjection;
+    setBounds(
+      bounds: LatLngBounds,
+      paddingTop?: number,
+      paddingRight?: number,
+      paddingBottom?: number,
+      paddingLeft?: number,
+    ): void;
   }
 
   class CustomOverlay {

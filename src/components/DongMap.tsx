@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import { clusterPins, type PinCluster } from "@/lib/clusterPins";
 import type { DongPin } from "@/lib/dongPins";
 import { loadKakaoMaps } from "@/lib/kakaoMaps";
 
@@ -41,24 +42,47 @@ export function DongMap({ pins }: Props) {
   useEffect(() => {
     const container = containerRef.current;
     if (!maps || !container) return;
+    const sdk = maps; // draw() 안에서도 null 이 아님을 유지
 
     const map = new maps.Map(container, {
       center: new maps.LatLng(home.lat, home.lng),
       level: LEVEL,
     });
     mapRef.current = map;
-    const overlays = pins.map(
-      (pin) =>
-        new maps.CustomOverlay({
-          position: new maps.LatLng(pin.lat, pin.lng),
-          content: pinElement(pin, () => setSelected(pin)),
-          yAnchor: 0.5,
-          zIndex: pin.mine ? 2 : 1,
-          clickable: true,
-          map,
+    let overlays: kakao.maps.CustomOverlay[] = [];
+
+    /** 확대 수준이 바뀔 때마다 화면에서 겹치는 동네를 묶어 다시 그린다 */
+    function draw() {
+      overlays.forEach((o) => o.setMap(null));
+      const projection = map.getProjection();
+      const clusters = clusterPins(
+        pins.map((pin) => {
+          const point = projection.containerPointFromCoords(
+            new sdk.LatLng(pin.lat, pin.lng),
+          );
+          return { pin, x: point.x, y: point.y };
         }),
-    );
+      );
+      overlays = clusters.map(
+        (cluster) =>
+          new sdk.CustomOverlay({
+            position: new sdk.LatLng(cluster.lead.lat, cluster.lead.lng),
+            content: clusterElement(cluster, () => {
+              if (cluster.pins.length === 1) setSelected(cluster.lead);
+              else map.setBounds(boundsOf(sdk, cluster.pins), 90, 40, 90, 40);
+            }),
+            yAnchor: 0.5,
+            zIndex: cluster.mine ? 2 : 1,
+            clickable: true,
+            map,
+          }),
+      );
+    }
+
+    draw();
+    maps.event.addListener(map, "zoom_changed", draw);
     return () => {
+      maps.event.removeListener(map, "zoom_changed", draw);
       overlays.forEach((o) => o.setMap(null));
       mapRef.current = null;
       container.replaceChildren(); // 다시 그릴 때 지도 DOM 이 쌓이지 않게
@@ -127,18 +151,36 @@ export function DongMap({ pins }: Props) {
   );
 }
 
-/** 말풍선 DOM. 동네 이름은 textContent 로만 넣는다 (HTML 해석 금지) */
-function pinElement(pin: DongPin, onClick: () => void) {
+function boundsOf(maps: typeof kakao.maps, pins: DongPin[]) {
+  const bounds = new maps.LatLngBounds();
+  pins.forEach((p) => bounds.extend(new maps.LatLng(p.lat, p.lng)));
+  return bounds;
+}
+
+/**
+ * 말풍선 DOM. 혼자면 "역삼1동 3", 묶이면 "신천동 외 3곳 19"(누르면 확대).
+ * 동네 이름은 textContent 로만 넣는다 (HTML 해석 금지)
+ */
+function clusterElement(cluster: PinCluster, onClick: () => void) {
+  const others = cluster.pins.length - 1;
+  const label =
+    others === 0 ? cluster.lead.name : `${cluster.lead.name} 외 ${others}곳`;
+
   const button = document.createElement("button");
   button.type = "button";
-  button.setAttribute("aria-label", `${pin.name} 이야기 ${pin.count}개`);
-  button.className = `flex items-center gap-1.5 rounded-full py-1.5 pr-1.5 pl-3 text-sm font-bold whitespace-nowrap shadow-[0_4px_12px_rgba(23,50,74,.18)] ${pin.mine ? "bg-primary text-white" : "bg-white text-ink"}`;
+  button.setAttribute(
+    "aria-label",
+    others === 0
+      ? `${label} 이야기 ${cluster.total}개`
+      : `${label} 이야기 ${cluster.total}개, 눌러서 확대`,
+  );
+  button.className = `flex items-center gap-1.5 rounded-full py-1.5 pr-1.5 pl-3 text-sm font-bold whitespace-nowrap shadow-[0_4px_12px_rgba(23,50,74,.18)] ${cluster.mine ? "bg-primary text-white" : "bg-white text-ink"}`;
 
   const name = document.createElement("span");
-  name.textContent = pin.name;
+  name.textContent = label;
   const badge = document.createElement("span");
-  badge.className = `min-w-6 rounded-full px-1.5 py-0.5 text-center text-xs font-extrabold ${pin.mine ? "bg-white text-primary-strong" : "bg-primary text-white"}`;
-  badge.textContent = String(pin.count);
+  badge.className = `min-w-6 rounded-full px-1.5 py-0.5 text-center text-xs font-extrabold ${cluster.mine ? "bg-white text-primary-strong" : "bg-primary text-white"}`;
+  badge.textContent = String(cluster.total);
 
   button.append(name, badge);
   button.addEventListener("click", onClick);
