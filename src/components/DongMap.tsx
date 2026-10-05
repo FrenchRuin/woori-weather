@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 
 import type { DongPin } from "@/lib/dongPins";
 
+import { DongPostsSheet } from "./DongPostsSheet";
 import { Crosshair } from "./icons";
 
 const KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
@@ -124,6 +125,8 @@ export function DongMap({ pins }: Props) {
           </button>
         </>
       )}
+
+      <DongPostsSheet dong={selected} onClose={() => setSelected(null)} />
     </main>
   );
 }
