@@ -6,6 +6,8 @@ import { useState } from "react";
 
 import type { Post } from "@/types";
 
+import { Emoji } from "./Emoji";
+import { ChatCircleDots, Megaphone } from "./icons";
 import { PostCard } from "./PostCard";
 import { ReportSheet } from "./ReportSheet";
 import { WriteButton } from "./WriteButton";
@@ -26,8 +28,14 @@ export function HomePosts({ posts, total, failed, dongName }: Props) {
   return (
     <section className="flex flex-col gap-2.5 pt-2">
       <div className="flex items-center justify-between px-1">
-        <h2 className="text-lg font-extrabold">
-          💬 동네 한마디{failed ? "" : ` · ${total}개`}
+        <h2 className="flex items-center gap-1.5 text-lg font-extrabold">
+          <ChatCircleDots
+            size={22}
+            weight="bold"
+            className="text-primary"
+            aria-hidden
+          />
+          동네 한마디{failed ? "" : ` · ${total}개`}
         </h2>
         <Link href="/posts" className="text-sm font-semibold text-primary">
           전체 보기 ›
@@ -40,9 +48,7 @@ export function HomePosts({ posts, total, failed, dongName }: Props) {
         </p>
       ) : posts.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-[18px] bg-white px-4 py-7 text-center">
-          <span className="text-4xl" aria-hidden>
-            📝
-          </span>
+          <Emoji name="memo" size={48} />
           <p className="text-[15px] leading-normal text-[#3B5A75]">
             아직 한마디가 없어요.
             <br />
@@ -70,7 +76,8 @@ export function HomePosts({ posts, total, failed, dongName }: Props) {
       />
 
       <WriteButton
-        label="📣 지금 우리 동네 날씨 알려주기"
+        icon={Megaphone}
+        label="지금 우리 동네 날씨 알려주기"
         dongName={dongName}
         onPosted={refresh}
       />

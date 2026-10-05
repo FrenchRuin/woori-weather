@@ -1,6 +1,8 @@
 import { hourOf, isNight, kstHourNow, weatherIcon } from "@/lib/weatherIcon";
 import type { Weather } from "@/types";
 
+import { WeatherIcon } from "./WeatherIcon";
+
 export function HourlyForecast({ hourly }: { hourly: Weather["hourly"] }) {
   if (hourly.length === 0) return null;
   const nowHour = kstHourNow();
@@ -20,9 +22,11 @@ export function HourlyForecast({ hourly }: { hourly: Weather["hourly"] }) {
               <span className="text-xs font-semibold text-[#6B8299]">
                 {isNow ? "지금" : `${hour}시`}
               </span>
-              <span className="text-[22px]" aria-hidden>
-                {weatherIcon(h.sky, h.pty, isNight(hour))}
-              </span>
+              <WeatherIcon
+                name={weatherIcon(h.sky, h.pty, isNight(hour))}
+                size={34}
+                className="-my-1"
+              />
               <b className="text-[15px]">{Math.round(h.temp)}°</b>
             </li>
           );

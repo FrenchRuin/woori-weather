@@ -5,19 +5,39 @@ export function isNight(hour: number) {
   return hour >= 18 || hour < 6;
 }
 
-export function weatherIcon(sky: Sky, pty: Pty, night: boolean) {
+/** Meteocons 아이콘 이름 (src/assets/weather/*.svg) */
+export type WeatherIconName =
+  | "clear-day"
+  | "clear-night"
+  | "partly-cloudy-day"
+  | "partly-cloudy-night"
+  | "cloudy"
+  | "rain"
+  | "partly-cloudy-day-rain"
+  | "partly-cloudy-night-rain"
+  | "snow"
+  | "sleet"
+  | "fog";
+
+export function weatherIcon(
+  sky: Sky,
+  pty: Pty,
+  night: boolean,
+): WeatherIconName {
+  const time = night ? "night" : "day";
   switch (pty) {
     case "rain":
-      return sky === "cloudy" ? "🌧️" : "🌦️";
+      return sky === "cloudy" ? "rain" : `partly-cloudy-${time}-rain`;
     case "shower":
-      return "🌦️";
+      return `partly-cloudy-${time}-rain`;
     case "rainsnow":
+      return "sleet";
     case "snow":
-      return "🌨️";
+      return "snow";
   }
-  if (sky === "cloudy") return "☁️";
-  if (sky === "partly") return night ? "☁️" : "⛅";
-  return night ? "🌙" : "☀️";
+  if (sky === "cloudy") return "cloudy";
+  if (sky === "partly") return `partly-cloudy-${time}`;
+  return `clear-${time}`;
 }
 
 /** KST ISO 문자열("...T15:00:00+09:00")에서 시(hour) */

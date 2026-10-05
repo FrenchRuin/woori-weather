@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { DongPicker } from "@/components/DongPicker";
+import { Emoji } from "@/components/Emoji";
 import { NicknameField } from "@/components/NicknameField";
 import { api, ApiError } from "@/lib/fetcher";
 import { useNicknameCheck } from "@/lib/useNicknameCheck";
@@ -55,7 +56,10 @@ export function OnboardingForm() {
     <main className="flex min-h-dvh flex-col bg-[#F6FBFF]">
       <div className="flex flex-1 flex-col gap-7 px-6 pt-14 pb-4">
         <h1 className="text-2xl leading-[1.4] font-extrabold tracking-[-0.02em]">
-          반가워요 👋
+          <span className="inline-flex items-center gap-1.5 align-middle">
+            반가워요
+            <Emoji name="wave" size={32} />
+          </span>
           <br />
           이웃에게 보일 정보를 알려주세요
         </h1>

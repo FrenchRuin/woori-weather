@@ -6,6 +6,8 @@ import { api, ApiError } from "@/lib/fetcher";
 import { regionLabel } from "@/lib/region";
 import type { Dong } from "@/types";
 
+import { MagnifyingGlass, NavigationArrow } from "./icons";
+
 type LocateState =
   | { status: "idle" }
   | { status: "locating" }
@@ -126,7 +128,8 @@ export function DongPicker({ value, onChange }: Props) {
         disabled={locate.status === "locating"}
         className="flex h-12 items-center justify-center gap-1.5 rounded-xl border-[1.5px] border-primary bg-white text-[15px] font-bold text-primary disabled:opacity-60"
       >
-        📍 {locate.status === "locating" ? "위치 찾는 중…" : "현재 위치로 찾기"}
+        <NavigationArrow size={18} weight="fill" aria-hidden />
+        {locate.status === "locating" ? "위치 찾는 중…" : "현재 위치로 찾기"}
       </button>
       {locate.status === "error" && (
         <p className="text-[13px] font-semibold text-danger">
@@ -135,7 +138,7 @@ export function DongPicker({ value, onChange }: Props) {
       )}
 
       <label className="flex h-13 items-center gap-2 rounded-xl border-[1.5px] border-[#D6E4EF] bg-white px-3.5 focus-within:border-primary">
-        <span aria-hidden>🔍</span>
+        <MagnifyingGlass size={20} className="text-muted" aria-hidden />
         <input
           value={query}
           onChange={(e) => changeQuery(e.target.value)}

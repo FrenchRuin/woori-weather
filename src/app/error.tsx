@@ -8,6 +8,7 @@ import {
   secondaryButton,
   StatusScreen,
 } from "@/components/StatusScreen";
+import { WeatherIcon } from "@/components/WeatherIcon";
 
 export default function Error({
   error,
@@ -22,7 +23,7 @@ export default function Error({
 
   return (
     <StatusScreen
-      emoji="🌧️"
+      icon={<WeatherIcon name="rain" size={112} animated />}
       title="잠깐 문제가 생겼어요"
       description="잠시 후 다시 시도해주세요. 계속 안 되면 앱을 새로 열어주세요"
     >

@@ -1,6 +1,8 @@
 "use client";
 
 // 루트 레이아웃까지 실패했을 때. 전역 스타일이 없으므로 인라인 스타일만 쓴다.
+import { WeatherIcon } from "@/components/WeatherIcon";
+
 export default function GlobalError({ retry }: { retry: () => void }) {
   return (
     <html lang="ko">
@@ -20,7 +22,7 @@ export default function GlobalError({ retry }: { retry: () => void }) {
         }}
       >
         <title>우리동네 날씨</title>
-        <span style={{ fontSize: 56 }}>🌧️</span>
+        <WeatherIcon name="rain" size={112} animated />
         <b style={{ fontSize: 20 }}>잠깐 문제가 생겼어요</b>
         <span style={{ fontSize: 15, color: "#3B5A75" }}>
           잠시 후 다시 시도해주세요

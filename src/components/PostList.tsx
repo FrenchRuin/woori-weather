@@ -7,6 +7,8 @@ import { api } from "@/lib/fetcher";
 import { POST_TAGS } from "@/lib/postTags";
 import type { Post, PostSort, PostTag } from "@/types";
 
+import { Emoji } from "./Emoji";
+import { ClockCounterClockwise, MapPin, PencilSimple } from "./icons";
 import { PostCard } from "./PostCard";
 import { ReportSheet } from "./ReportSheet";
 import { WriteButton } from "./WriteButton";
@@ -92,8 +94,14 @@ export function PostList({
           </Link>
           <div className="flex flex-col">
             <h1 className="text-lg font-bold">동네 한마디</h1>
-            <span className="text-[13px] text-[#6B8299]">
-              📍 {dongName} · 최근 6시간
+            <span className="flex items-center gap-0.5 text-[13px] text-[#6B8299]">
+              <MapPin
+                size={14}
+                weight="fill"
+                className="text-primary"
+                aria-hidden
+              />
+              {dongName} · 최근 6시간
             </span>
           </div>
         </div>
@@ -114,7 +122,7 @@ export function PostList({
       </header>
 
       <div className="flex [scrollbar-width:none] gap-1.5 overflow-x-auto px-4 py-3.5">
-        {[{ key: null, label: "전체" }, ...POST_TAGS].map((t) => {
+        {[{ key: null, label: "전체", icon: null }, ...POST_TAGS].map((t) => {
           const selected = tag === t.key;
           return (
             <button
@@ -122,8 +130,16 @@ export function PostList({
               type="button"
               aria-pressed={selected}
               onClick={() => setTag(t.key)}
-              className={`shrink-0 rounded-full px-3.5 py-1.75 text-sm ${selected ? "bg-ink font-bold text-white" : "border-[1.5px] border-line bg-white font-semibold"}`}
+              className={`flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.75 text-sm ${selected ? "bg-ink font-bold text-white" : "border-[1.5px] border-line bg-white font-semibold"}`}
             >
+              {t.icon && (
+                <t.icon
+                  size={16}
+                  weight={selected ? "bold" : "regular"}
+                  className={selected ? "" : "text-sub"}
+                  aria-hidden
+                />
+              )}
               {t.label}
             </button>
           );
@@ -142,9 +158,7 @@ export function PostList({
 
         {recent.length === 0 ? (
           <div className="flex flex-col items-center gap-2 rounded-[18px] bg-white px-4 py-7 text-center">
-            <span className="text-4xl" aria-hidden>
-              {tag ? "🔍" : "📝"}
-            </span>
+            <Emoji name={tag ? "magnifier" : "memo"} size={48} />
             {tag ? (
               <p className="text-[15px] text-[#3B5A75]">
                 최근 6시간 동안 올라온 글이 없어요
@@ -172,7 +186,10 @@ export function PostList({
           <>
             <div className="flex items-center gap-2.5 px-1 py-2.5 text-xs font-bold text-muted">
               <div className="h-px flex-1 bg-[#D6E2EC]" />
-              🕕 6시간 지난 글
+              <span className="flex items-center gap-1">
+                <ClockCounterClockwise size={14} weight="bold" aria-hidden />
+                6시간 지난 글
+              </span>
               <div className="h-px flex-1 bg-[#D6E2EC]" />
             </div>
             {old.map((post) => (
@@ -198,7 +215,8 @@ export function PostList({
       />
 
       <WriteButton
-        label="✏️ 한마디 남기기"
+        icon={PencilSimple}
+        label="한마디 남기기"
         dongName={dongName}
         onPosted={() => {
           setSort("new");

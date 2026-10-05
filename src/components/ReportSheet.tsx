@@ -8,6 +8,7 @@ import { toast } from "@/lib/toast";
 import type { Post } from "@/types";
 
 import { BottomSheet } from "./BottomSheet";
+import { Siren } from "./icons";
 
 type Props = {
   post: Post | null; // null 이면 닫힘
@@ -32,7 +33,7 @@ export function ReportSheet({ post, onClose, onReported }: Props) {
         method: "POST",
         body: JSON.stringify({ reason }),
       });
-      toast("🚨 신고가 접수됐어요");
+      toast("신고가 접수됐어요", "siren");
       setReason(null);
       onReported(post.id);
     } catch (e) {
@@ -47,7 +48,10 @@ export function ReportSheet({ post, onClose, onReported }: Props) {
   return (
     <BottomSheet open={post !== null} onClose={close} label="신고하기">
       <div className="flex flex-col gap-1">
-        <b className="text-xl">🚨 이 한마디를 신고할까요?</b>
+        <b className="flex items-center gap-1.5 text-xl">
+          <Siren size={24} weight="bold" className="text-danger" aria-hidden />
+          이 한마디를 신고할까요?
+        </b>
         <span className="text-sm text-[#6B8299]">사유를 하나 골라주세요</span>
       </div>
 

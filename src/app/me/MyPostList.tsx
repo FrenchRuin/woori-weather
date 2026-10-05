@@ -3,6 +3,8 @@
 import { useState } from "react";
 
 import { ConfirmSheet } from "@/components/ConfirmSheet";
+import { Emoji } from "@/components/Emoji";
+import { Heart, PencilSimple } from "@/components/icons";
 import { api, ApiError } from "@/lib/fetcher";
 import { postTagMeta } from "@/lib/postTags";
 import { relativeTime } from "@/lib/time";
@@ -32,15 +34,19 @@ export function MyPostList({ initial }: { initial: MyPost[] }) {
 
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="px-1 pt-3 text-base font-extrabold">
-        ✏️ 내가 쓴 한마디 · {posts.length}
+      <h2 className="flex items-center gap-1.5 px-1 pt-3 text-base font-extrabold">
+        <PencilSimple
+          size={18}
+          weight="bold"
+          className="text-primary"
+          aria-hidden
+        />
+        내가 쓴 한마디 · {posts.length}
       </h2>
 
       {posts.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-[18px] bg-white px-4 py-7 text-center">
-          <span className="text-4xl" aria-hidden>
-            📝
-          </span>
+          <Emoji name="memo" size={48} />
           <p className="text-[15px] text-[#3B5A75]">아직 쓴 한마디가 없어요</p>
         </div>
       ) : (
@@ -68,8 +74,9 @@ export function MyPostList({ initial }: { initial: MyPost[] }) {
                 </div>
                 {tag && (
                   <span
-                    className={`shrink-0 rounded-md px-2 py-0.75 text-xs font-semibold ${tag.badge}`}
+                    className={`flex shrink-0 items-center gap-1 rounded-md px-2 py-0.75 text-xs font-semibold ${tag.badge}`}
                   >
+                    <tag.icon size={13} weight="bold" aria-hidden />
                     {tag.label}
                   </span>
                 )}
@@ -85,8 +92,14 @@ export function MyPostList({ initial }: { initial: MyPost[] }) {
                 </p>
               )}
               <div className="flex items-center justify-between">
-                <span className="text-[13px] font-bold text-[#6B8299]">
-                  💙 공감 {post.likeCount}
+                <span className="flex items-center gap-1 text-[13px] font-bold text-[#6B8299]">
+                  <Heart
+                    size={15}
+                    weight="fill"
+                    className="text-primary"
+                    aria-hidden
+                  />
+                  공감 {post.likeCount}
                 </span>
                 <button
                   type="button"

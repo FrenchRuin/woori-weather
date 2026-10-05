@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { BottomSheet } from "@/components/BottomSheet";
 import { DongPicker } from "@/components/DongPicker";
+import { MapPin } from "@/components/icons";
 import { api, ApiError } from "@/lib/fetcher";
 import { regionLabel } from "@/lib/region";
 import { toast } from "@/lib/toast";
@@ -20,8 +21,13 @@ export function DongCard({ dong }: { dong: Dong }) {
         onClick={() => setOpen(true)}
         className="flex items-center gap-3 rounded-[20px] bg-white px-4.5 py-4 text-left"
       >
-        <span aria-hidden className="text-2xl">
-          📍
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary-soft">
+          <MapPin
+            size={24}
+            weight="fill"
+            className="text-primary"
+            aria-hidden
+          />
         </span>
         <span className="flex min-w-0 flex-1 flex-col gap-0.5">
           <span className="text-xs font-semibold text-muted">내 동네</span>
@@ -59,7 +65,7 @@ function DongForm({ current, onDone }: { current: Dong; onDone: () => void }) {
         method: "PATCH",
         body: JSON.stringify({ dongCode: dong.code }),
       });
-      toast(`📍 내 동네를 ${dong.name}(으)로 바꿨어요`);
+      toast(`내 동네를 ${dong.name}(으)로 바꿨어요`, "pin");
       onDone();
       router.refresh();
     } catch (e) {

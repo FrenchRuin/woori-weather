@@ -1,0 +1,22 @@
+// Phosphor 선 아이콘 (MIT). 서버·클라이언트 컴포넌트 모두에서 쓰도록 ssr 빌드를 아이콘별로 가져온다
+export { ChatCircle } from "@phosphor-icons/react/dist/ssr/ChatCircle";
+export { ChatCircleDots } from "@phosphor-icons/react/dist/ssr/ChatCircleDots";
+export { CheckCircle } from "@phosphor-icons/react/dist/ssr/CheckCircle";
+export { ClockCounterClockwise } from "@phosphor-icons/react/dist/ssr/ClockCounterClockwise";
+export { Drop } from "@phosphor-icons/react/dist/ssr/Drop";
+export { Heart } from "@phosphor-icons/react/dist/ssr/Heart";
+export { Info } from "@phosphor-icons/react/dist/ssr/Info";
+export { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr/MagnifyingGlass";
+export { MapPin } from "@phosphor-icons/react/dist/ssr/MapPin";
+export { Megaphone } from "@phosphor-icons/react/dist/ssr/Megaphone";
+export { NavigationArrow } from "@phosphor-icons/react/dist/ssr/NavigationArrow";
+export { PencilSimple } from "@phosphor-icons/react/dist/ssr/PencilSimple";
+export { Siren } from "@phosphor-icons/react/dist/ssr/Siren";
+export { SunDim } from "@phosphor-icons/react/dist/ssr/SunDim";
+export { Thermometer } from "@phosphor-icons/react/dist/ssr/Thermometer";
+export { Umbrella } from "@phosphor-icons/react/dist/ssr/Umbrella";
+export { User } from "@phosphor-icons/react/dist/ssr/User";
+export { UsersThree } from "@phosphor-icons/react/dist/ssr/UsersThree";
+export { WarningCircle } from "@phosphor-icons/react/dist/ssr/WarningCircle";
+export { Wind } from "@phosphor-icons/react/dist/ssr/Wind";
+export type { Icon } from "@phosphor-icons/react";

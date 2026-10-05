@@ -9,6 +9,7 @@ import { toast } from "@/lib/toast";
 import type { Post } from "@/types";
 
 import { ConfirmSheet } from "./ConfirmSheet";
+import { Heart, Siren } from "./icons";
 
 type Props = {
   post: Post;
@@ -84,8 +85,9 @@ export function PostCard({ post, dimmed, onDeleted, onReport }: Props) {
         </div>
         {tag && (
           <span
-            className={`shrink-0 rounded-md px-2 py-0.75 text-xs font-semibold ${tag.badge}`}
+            className={`flex shrink-0 items-center gap-1 rounded-md px-2 py-0.75 text-xs font-semibold ${tag.badge}`}
           >
+            <tag.icon size={13} weight="bold" aria-hidden />
             {tag.label}
           </span>
         )}
@@ -102,7 +104,13 @@ export function PostCard({ post, dimmed, onDeleted, onReport }: Props) {
           aria-pressed={liked}
           className={`flex items-center gap-1.25 rounded-full px-2.75 py-1.25 text-[13px] font-bold ${liked ? "border-[1.5px] border-[#9FD0F5] bg-[#E3F1FD] text-primary-strong" : "bg-field text-sub"}`}
         >
-          {liked ? "💙" : "🤍"} 공감 {likeCount}
+          <Heart
+            size={15}
+            weight={liked ? "fill" : "bold"}
+            className={liked ? "text-primary" : ""}
+            aria-hidden
+          />
+          공감 {likeCount}
         </button>
         {post.isMine ? (
           <button
@@ -117,9 +125,10 @@ export function PostCard({ post, dimmed, onDeleted, onReport }: Props) {
             <button
               type="button"
               onClick={() => onReport(post)}
-              className="text-xs text-[#9AACBB]"
+              className="flex items-center gap-1 text-xs text-[#9AACBB]"
             >
-              🚨 신고
+              <Siren size={14} aria-hidden />
+              신고
             </button>
           )
         )}

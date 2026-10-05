@@ -2,6 +2,8 @@
 
 import type { NicknameCheck } from "@/lib/useNicknameCheck";
 
+import { CheckCircle, WarningCircle } from "./icons";
+
 type Props = {
   value: string;
   onChange: (value: string) => void;
@@ -39,13 +41,15 @@ export function NicknameField({ value, onChange, check, autoFocus }: Props) {
         <span className="text-[13px] text-muted">{value.trim().length}/10</span>
       </div>
       {check.status === "error" && (
-        <p className="text-[13px] font-semibold text-[#E0403D]">
-          ⚠️ {check.message}
+        <p className="flex items-center gap-1 text-[13px] font-semibold text-[#E0403D]">
+          <WarningCircle size={16} weight="fill" aria-hidden />
+          {check.message}
         </p>
       )}
       {check.status === "ok" && (
-        <p className="text-[13px] font-semibold text-[#1F9E62]">
-          ✅ 사용할 수 있는 닉네임이에요
+        <p className="flex items-center gap-1 text-[13px] font-semibold text-[#1F9E62]">
+          <CheckCircle size={16} weight="fill" aria-hidden />
+          사용할 수 있는 닉네임이에요
         </p>
       )}
       {check.status === "checking" && (

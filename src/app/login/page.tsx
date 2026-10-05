@@ -1,6 +1,13 @@
+import { Emoji, type EmojiName } from "@/components/Emoji";
+import { WeatherIcon } from "@/components/WeatherIcon";
+
 import { KakaoLoginButton } from "./KakaoLoginButton";
 
-const FEELS = ["🥶 추워요", "😊 딱 좋아요", "🥵 더워요"];
+const FEELS: { emoji: EmojiName; label: string }[] = [
+  { emoji: "cold", label: "추워요" },
+  { emoji: "good", label: "딱 좋아요" },
+  { emoji: "hot", label: "더워요" },
+];
 
 function errorMessage(error: string) {
   if (/email/i.test(error)) {
@@ -16,8 +23,8 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   return (
     <main className="flex min-h-dvh flex-col bg-linear-to-b from-[#BFE3FB] via-[#E6F4FD] via-55% to-[#F6FBFF] px-6 pb-10">
       <div className="flex flex-1 flex-col items-center justify-center gap-4.5 text-center">
-        <div className="flex size-26 items-center justify-center rounded-[32px] bg-white text-6xl shadow-[0_12px_30px_rgba(43,149,233,.22)]">
-          ⛅
+        <div className="flex size-26 items-center justify-center rounded-[32px] bg-white shadow-[0_12px_30px_rgba(43,149,233,.22)]">
+          <WeatherIcon name="partly-cloudy-day" size={96} animated preload />
         </div>
         <h1 className="mt-2 text-[34px] font-extrabold tracking-[-0.03em]">
           우리동네 날씨
@@ -32,10 +39,11 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
         <div className="mt-3.5 flex gap-2">
           {FEELS.map((f) => (
             <span
-              key={f}
-              className="rounded-full bg-white px-3.5 py-2 text-sm font-semibold"
+              key={f.emoji}
+              className="flex items-center gap-1.5 rounded-full bg-white py-1.5 pr-3.5 pl-2.5 text-sm font-semibold"
             >
-              {f}
+              <Emoji name={f.emoji} size={22} />
+              {f.label}
             </span>
           ))}
         </div>

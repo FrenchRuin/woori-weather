@@ -5,9 +5,19 @@ import { useState } from "react";
 import { api, ApiError } from "@/lib/fetcher";
 import type { Feel, ReactionSummary, ReactionTag } from "@/types";
 
+import { Emoji, type EmojiName } from "./Emoji";
+import {
+  CheckCircle,
+  type Icon,
+  SunDim,
+  Umbrella,
+  UsersThree,
+  Wind,
+} from "./icons";
+
 const FEELS: {
   key: Feel;
-  emoji: string;
+  emoji: EmojiName;
   label: string;
   bar: string;
   text: string;
@@ -15,7 +25,7 @@ const FEELS: {
 }[] = [
   {
     key: "cold",
-    emoji: "🥶",
+    emoji: "cold",
     label: "추워요",
     bar: "bg-cold",
     text: "text-[#2F7BDB]",
@@ -23,7 +33,7 @@ const FEELS: {
   },
   {
     key: "good",
-    emoji: "😊",
+    emoji: "good",
     label: "딱 좋아요",
     bar: "bg-good",
     text: "text-[#1F9E62]",
@@ -31,7 +41,7 @@ const FEELS: {
   },
   {
     key: "hot",
-    emoji: "🥵",
+    emoji: "hot",
     label: "더워요",
     bar: "bg-hot",
     text: "text-[#E06D1E]",
@@ -39,10 +49,10 @@ const FEELS: {
   },
 ];
 
-const TAGS: { key: ReactionTag; label: string }[] = [
-  { key: "rain", label: "☔ 비 와요" },
-  { key: "wind", label: "💨 바람 세요" },
-  { key: "clear", label: "🌤️ 그쳤어요" },
+const TAGS: { key: ReactionTag; label: string; icon: Icon }[] = [
+  { key: "rain", label: "비 와요", icon: Umbrella },
+  { key: "wind", label: "바람 세요", icon: Wind },
+  { key: "clear", label: "그쳤어요", icon: SunDim },
 ];
 
 export function FeelCard({ initial }: { initial: ReactionSummary }) {
@@ -89,7 +99,15 @@ export function FeelCard({ initial }: { initial: ReactionSummary }) {
   return (
     <section className="flex flex-col gap-4 rounded-[22px] border-2 border-[#CFE6F8] bg-white px-4.5 py-5">
       <div className="flex flex-col gap-1.5">
-        <h2 className="text-lg font-extrabold">🏘️ 지금 동네 체감</h2>
+        <h2 className="flex items-center gap-1.5 text-lg font-extrabold">
+          <UsersThree
+            size={22}
+            weight="bold"
+            className="text-primary"
+            aria-hidden
+          />
+          지금 동네 체감
+        </h2>
         {!empty && (
           <p className="text-sm text-sub">
             최근 1시간 · {summary.total}명 참여 ·{" "}
@@ -103,8 +121,9 @@ export function FeelCard({ initial }: { initial: ReactionSummary }) {
       {empty ? (
         <>
           <div className="h-3.5 rounded-full bg-[repeating-linear-gradient(90deg,#E6EEF5_0_10px,#EEF4F9_10px_20px)]" />
-          <p className="text-center text-[15px] leading-normal text-[#3B5A75]">
-            🙋 아직 아무도 반응하지 않았어요.
+          <p className="flex flex-col items-center text-center text-[15px] leading-normal text-[#3B5A75]">
+            <Emoji name="raising-hand" size={36} className="mb-1" />
+            아직 아무도 반응하지 않았어요.
             <br />
             <b className="text-ink">첫 번째로 알려주세요</b>
           </p>
@@ -149,9 +168,7 @@ export function FeelCard({ initial }: { initial: ReactionSummary }) {
               onClick={() => submit(f.key, selectedTags)}
               className={`relative flex flex-col items-center justify-center gap-1 rounded-2xl transition ${empty ? "h-19" : "h-21"} ${selected ? f.selected : "bg-field"} ${dimmed ? "opacity-60" : ""}`}
             >
-              <span className="text-[30px]" aria-hidden>
-                {f.emoji}
-              </span>
+              <Emoji name={f.emoji} size={36} />
               <b className={`text-sm ${selected ? f.text : ""}`}>{f.label}</b>
               {selected && (
                 <span
@@ -181,8 +198,14 @@ export function FeelCard({ initial }: { initial: ReactionSummary }) {
                   disabled={pending}
                   aria-pressed={selected}
                   onClick={() => toggleTag(t.key)}
-                  className={`flex gap-1.5 rounded-full border-[1.5px] px-3 py-1.75 text-sm ${selected ? "border-primary bg-primary-soft font-bold text-primary-strong" : "border-line font-semibold"}`}
+                  className={`flex items-center gap-1.5 rounded-full border-[1.5px] px-3 py-1.75 text-sm ${selected ? "border-primary bg-primary-soft font-bold text-primary-strong" : "border-line font-semibold"}`}
                 >
+                  <t.icon
+                    size={16}
+                    weight={selected ? "bold" : "regular"}
+                    className={selected ? "" : "text-sub"}
+                    aria-hidden
+                  />
                   {t.label}
                   <span className={selected ? "" : "text-muted"}>
                     {summary.tags[t.key]}
@@ -204,7 +227,12 @@ export function FeelCard({ initial }: { initial: ReactionSummary }) {
       ) : (
         mine && (
           <p className="flex items-center gap-1.5 rounded-xl bg-canvas px-3.5 py-2.75 text-[13px] text-[#3B5A75]">
-            ✅{" "}
+            <CheckCircle
+              size={18}
+              weight="fill"
+              className="shrink-0 text-good"
+              aria-hidden
+            />
             <span>
               <b>반영됐어요.</b> 1시간 안에는 바꿀 수만 있어요
             </span>

@@ -1,19 +1,17 @@
 import type { ReactNode } from "react";
 
 type Props = {
-  emoji: string;
+  icon: ReactNode; // WeatherIcon 이나 Emoji
   title: string;
   description: string;
   children: ReactNode; // 버튼
 };
 
 /** 에러 / 없는 페이지 등 전체 화면 안내 */
-export function StatusScreen({ emoji, title, description, children }: Props) {
+export function StatusScreen({ icon, title, description, children }: Props) {
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-3 px-8 text-center">
-      <span className="text-6xl" aria-hidden>
-        {emoji}
-      </span>
+      {icon}
       <h1 className="mt-2 text-xl font-extrabold">{title}</h1>
       <p className="text-[15px] leading-normal break-keep text-[#3B5A75]">
         {description}

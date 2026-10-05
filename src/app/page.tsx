@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 
+import { Emoji } from "@/components/Emoji";
 import { FeelCard } from "@/components/FeelCard";
 import { HomePosts } from "@/components/HomePosts";
+import { MapPin, User } from "@/components/icons";
 import {
   FeelSkeleton,
   PostsSkeleton,
@@ -11,6 +13,7 @@ import {
 } from "@/components/Skeletons";
 import { HourlyForecast } from "@/components/HourlyForecast";
 import { WeatherHero } from "@/components/WeatherHero";
+import { WeatherIcon } from "@/components/WeatherIcon";
 import { listPosts } from "@/lib/posts";
 import { getMyProfile } from "@/lib/profile";
 import { getReactionSummary } from "@/lib/reactions";
@@ -33,7 +36,13 @@ export default async function Home() {
           <h1 className="text-xl font-extrabold">
             {/* 동네는 1개라 변경은 내 정보에서 */}
             <Link href="/me" className="flex items-center gap-1">
-              📍 {profile.dong.name}
+              <MapPin
+                size={22}
+                weight="fill"
+                className="text-primary"
+                aria-hidden
+              />
+              {profile.dong.name}
               <span className="text-sm text-sub" aria-hidden>
                 ▾
               </span>
@@ -42,9 +51,9 @@ export default async function Home() {
           <Link
             href="/me"
             aria-label="내 정보"
-            className="flex size-10 items-center justify-center rounded-full bg-white text-xl"
+            className="flex size-10 items-center justify-center rounded-full bg-white text-ink"
           >
-            👤
+            <User size={22} aria-hidden />
           </Link>
         </header>
         <Suspense fallback={<WeatherSkeleton />}>
@@ -98,7 +107,12 @@ async function FeelSection({
   const supabase = await createClient();
   const summary = await orNull(getReactionSummary(supabase, dongCode, userId));
   if (!summary) {
-    return <SectionError emoji="🙋" message="투표 현황을 불러오지 못했어요" />;
+    return (
+      <SectionError
+        icon={<Emoji name="raising-hand" size={48} />}
+        message="투표 현황을 불러오지 못했어요"
+      />
+    );
   }
   // 동네를 바꾸면 카드 상태를 새로 시작
   return <FeelCard key={dongCode} initial={summary} />;
@@ -117,7 +131,10 @@ async function WeatherSection({ dongCode }: { dongCode: string }) {
   if (!weather) {
     return (
       <div className="mx-4 mt-6">
-        <SectionError emoji="🌫️" message="날씨를 불러오지 못했어요" />
+        <SectionError
+          icon={<WeatherIcon name="fog" size={72} className="-my-2" />}
+          message="날씨를 불러오지 못했어요"
+        />
       </div>
     );
   }
@@ -140,12 +157,10 @@ function orNull<T>(promise: Promise<T>) {
   });
 }
 
-function SectionError({ emoji, message }: { emoji: string; message: string }) {
+function SectionError({ icon, message }: { icon: ReactNode; message: string }) {
   return (
-    <div className="rounded-[20px] bg-white px-4 py-8 text-center">
-      <p className="text-4xl" aria-hidden>
-        {emoji}
-      </p>
+    <div className="flex flex-col items-center rounded-[20px] bg-white px-4 py-8 text-center">
+      {icon}
       <p className="mt-2 text-[15px] text-[#3B5A75]">
         {message}
         <br />

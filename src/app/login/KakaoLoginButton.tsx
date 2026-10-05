@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { ChatCircle } from "@/components/icons";
 import { createClient } from "@/lib/supabase/client";
 
 export function KakaoLoginButton() {
@@ -23,7 +24,8 @@ export function KakaoLoginButton() {
       disabled={pending}
       className="flex h-14 w-full items-center justify-center gap-2 rounded-[14px] bg-kakao text-[17px] font-bold text-[#191600] disabled:opacity-60"
     >
-      💬 {pending ? "카카오로 이동 중…" : "카카오로 시작하기"}
+      <ChatCircle size={22} weight="fill" aria-hidden />
+      {pending ? "카카오로 이동 중…" : "카카오로 시작하기"}
     </button>
   );
 }

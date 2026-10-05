@@ -116,8 +116,14 @@ export function WriteSheet({ open, dongName, onClose, onPosted }: Props) {
                 type="button"
                 aria-pressed={selected}
                 onClick={() => setTag(selected ? null : t.key)}
-                className={`rounded-full border-[1.5px] px-3 py-1.75 text-sm ${selected ? "border-primary bg-primary-soft font-bold text-primary-strong" : "border-line font-semibold"}`}
+                className={`flex items-center gap-1.5 rounded-full border-[1.5px] px-3 py-1.75 text-sm ${selected ? "border-primary bg-primary-soft font-bold text-primary-strong" : "border-line font-semibold"}`}
               >
+                <t.icon
+                  size={16}
+                  weight={selected ? "bold" : "regular"}
+                  className={selected ? "" : "text-sub"}
+                  aria-hidden
+                />
                 {t.label}
               </button>
             );
