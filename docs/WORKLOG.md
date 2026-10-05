@@ -201,10 +201,17 @@
 | 아이콘 (10-05) | 이모지 대신 날씨=Meteocons(메인·에러는 애니메이션), UI=Phosphor 선, 표정=Fluent Emoji 3D. 모두 MIT, 파일은 `src/assets/`                 |
 | 지도 (10-05)   | 스펙 밖 추가 기능. 이웃 동네별 최근 6시간 이야기 수 + 동네 글 읽기. 설계: `docs/superpowers/specs/2026-10-05-neighborhood-map-design.md` |
 
+## 추가: 이웃 동네 지도 (2026-10-05)
+
+- `/map`: 카카오맵 위에 동네별 최근 6시간 이야기 수 말풍선, 내 동네 강조, 누르면 그 동네 한마디 시트(공감·신고 가능, 글쓰기 없음)
+- 집계는 서버에서 `posts.dong_code` 를 모아 셈(`lib/map.ts` → `lib/dongPins.ts`). 새 API·마이그레이션 없음. 최근 글이 1000개를 넘으면 DB 함수로 전환
+- 환경 변수 `NEXT_PUBLIC_KAKAO_JS_KEY` 추가, 카카오 콘솔 Web 도메인 등록 필요
+- 검증: 단위 테스트(집계), 로컬 테스트 계정 3개(`*@woori.test`, 확인 후 삭제)로 개수·시트·공감·신고 시트·삭제·느린 응답 전환·SDK 실패 화면 확인
+
 ## 운영 메모
 
 - Supabase 관리 작업(마이그레이션 적용, Auth 설정)은 `.env.local`의 `SUPABASE_ACCESS_TOKEN`으로 Management API를 호출한다. 작업이 끝나면 토큰을 Revoke한다.
 - 카카오 로그인 설정은 README의 "카카오 로그인 (Supabase)" 참고
 - Supabase Auth URL 설정(2026-10-02): Site URL `https://woori-weather.vercel.app`, Redirect URLs `http://localhost:3000/auth/callback`, `https://woori-weather.vercel.app/auth/callback`
-- Vercel 환경 변수는 `.env.example`의 5개만(`SUPABASE_ACCESS_TOKEN`, `KAKAO_CLIENT_SECRET`은 넣지 않음)
+- Vercel 환경 변수는 `.env.example`의 6개만(지도용 `NEXT_PUBLIC_KAKAO_JS_KEY` 포함. `SUPABASE_ACCESS_TOKEN`, `KAKAO_CLIENT_SECRET`은 넣지 않음)
 - 테스트 방법: 서비스 키로 테스트 유저(`*@woori.test`)를 만들어 세션 쿠키로 API/브라우저 확인, 끝나면 `*@woori.test` 유저 삭제(cascade로 데이터도 삭제). 개발 서버를 백그라운드로 오래 띄우면 출력이 끊겨(EPIPE) 새 코드가 반영 안 될 수 있으니 이상하면 재시작

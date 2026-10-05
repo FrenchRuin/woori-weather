@@ -5,7 +5,7 @@ import { Suspense, type ReactNode } from "react";
 import { Emoji } from "@/components/Emoji";
 import { FeelCard } from "@/components/FeelCard";
 import { HomePosts } from "@/components/HomePosts";
-import { MapPin, User } from "@/components/icons";
+import { MapPin, MapTrifold, User } from "@/components/icons";
 import {
   FeelSkeleton,
   PostsSkeleton,
@@ -48,13 +48,22 @@ export default async function Home() {
               </span>
             </Link>
           </h1>
-          <Link
-            href="/me"
-            aria-label="내 정보"
-            className="flex size-10 items-center justify-center rounded-full bg-white text-ink"
-          >
-            <User size={22} aria-hidden />
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href="/map"
+              aria-label="이웃 동네 지도"
+              className="flex size-10 items-center justify-center rounded-full bg-white text-ink"
+            >
+              <MapTrifold size={22} aria-hidden />
+            </Link>
+            <Link
+              href="/me"
+              aria-label="내 정보"
+              className="flex size-10 items-center justify-center rounded-full bg-white text-ink"
+            >
+              <User size={22} aria-hidden />
+            </Link>
+          </div>
         </header>
         <Suspense fallback={<WeatherSkeleton />}>
           <WeatherSection dongCode={profile.dong.code} />
