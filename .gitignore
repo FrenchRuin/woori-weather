@@ -46,3 +46,8 @@ next-env.d.ts
 
 # IntelliJ 개인 설정
 /.idea/workspace.xml
+
+# Vim undo/swap 파일 (.env.local 편집 시 키가 남을 수 있음)
+*.un~
+*.swp
+*~
