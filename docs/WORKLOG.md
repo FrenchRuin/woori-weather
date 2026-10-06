@@ -15,13 +15,13 @@
 | M7 신고 + 내 정보         | ✅ 완료 (4계정으로 신고 3건 숨김 확인) | `fec7c88` |
 | M8 마무리                 | 🟡 배포 완료, 실제 폰 확인 남음        | `94048a8` |
 
-## 다음 세션에서 이어서 할 일 (2026-10-02 기준)
+## 다음 세션에서 이어서 할 일 (2026-10-06 기준)
 
 - 배포 주소: https://woori-weather.vercel.app (`main` push 시 Vercel 자동 배포, 리전 icn1)
 - 로컬: `pnpm dev` → http://localhost:3000 (`.env.local` 필요)
 
-1. **실제 폰 확인 (M8 완료 기준)**: 아래 "M8 → 실제 폰 확인 목록"을 배포 주소에서 확인. 문제가 있으면 수정 → push → 재확인, 다 되면 진행 현황의 M8을 ✅로 바꾼다
-2. **보안 정리**: `.env.local`의 `SUPABASE_ACCESS_TOKEN` 삭제 + Supabase 대시보드(Account → Access Tokens)에서 Revoke. 이후 Supabase 설정 변경은 대시보드에서 직접 한다
+1. **실제 폰 확인 (M8 완료 기준)**: 아래 "M8 → 실제 폰 확인 목록"과 `/map`(지도·말풍선·동네 시트)을 배포 주소에서 확인. `/map`은 로컬에서 확인됨(10-06). 문제가 있으면 수정 → push → 재확인, 다 되면 진행 현황의 M8을 ✅로 바꾼다
+2. **보안 정리**: Supabase 대시보드(Account → Access Tokens)에서 `SUPABASE_ACCESS_TOKEN` Revoke. 데스크톱 `.env.local`에서는 줄 삭제함(10-06), 다른 PC에도 있으면 삭제. 이후 Supabase 설정 변경은 대시보드에서 직접 한다
 3. 스펙(M1~M8) 밖의 기능은 추가하지 않는다. 새로 하고 싶은 게 생기면 결정 사항에 먼저 적고 진행
 
 ---
